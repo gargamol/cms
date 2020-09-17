@@ -1,0 +1,10 @@
+query WebsiteScheduledContent($sectionId: Int!) {
+  websiteScheduledContent(input: { sectionId: $sectionId }) {
+    edges {
+      node {
+        id
+        name
+      }
+    }
+  }
+}
