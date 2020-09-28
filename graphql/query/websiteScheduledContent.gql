@@ -1,0 +1,37 @@
+query WebsiteScheduledContent($sectionId: Int!, $limit: Int!) {
+  websiteScheduledContent(
+    input: { sectionId: $sectionId, pagination: { limit: $limit } }
+  ) {
+    edges {
+      node {
+        id
+        type
+        created
+        published
+        unpublished
+        updated
+        status
+        websiteSchedules {
+          section {
+            hierarchy {
+              fullName
+            }
+          }
+        }
+        primaryImage {
+          name
+          filePath
+          fileName
+          src
+          isLogo
+        }
+        primarySite {
+          host
+        }
+        name
+        teaser
+        body
+      }
+    }
+  }
+}
