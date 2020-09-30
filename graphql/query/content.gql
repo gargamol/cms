@@ -1,0 +1,22 @@
+query Content($id: Int!) {
+  content(input: { id: $id, status: any }) {
+    id
+    type
+    name
+    teaser
+    body
+    published
+    updated
+    status
+    primaryImage {
+      name
+      filePath
+      fileName
+      src
+      isLogo
+    }
+    primarySite {
+      host
+    }
+  }
+}

@@ -17,14 +17,3 @@
     </ApolloQuery>
   </div>
 </template>
-
-<script>
-export default {
-  data() {
-    return {
-      checkbox: false,
-      checkboxCustom: 'Yes',
-    };
-  },
-};
-</script>
