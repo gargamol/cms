@@ -1,3 +1,6 @@
+const router = require('./core/router');
+require('dotenv').config();
+
 export default {
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
@@ -36,10 +39,10 @@ export default {
   apollo: {
     clientConfigs: {
       default: {
-        httpEndpoint: 'https://picon.graphql.base-cms.io/graphql',
+        httpEndpoint: process.env.HTTP_ENDPOINT,
         httpLinkOptions: {
           headers: {
-            'x-tenant-key': 'cygnus_ofcr',
+            'x-tenant-key': process.env.TENANT_KEY,
             'x-cdn-image-hostname': 'base.imgix.net',
             'x-cdn-asset-hostname': 'media.cygnus.com',
           },
@@ -47,19 +50,9 @@ export default {
       },
     },
   },
-
   router: {
     extendRoutes(routes, resolve) {
-      routes.push({
-        name: 'custom',
-        path: '*',
-        component: resolve(__dirname, 'pages/section.vue'),
-      });
-      routes.push({
-        name: 'custom',
-        path: '*',
-        component: resolve(__dirname, 'pages/404.vue'),
-      });
+      return router(routes, resolve);
     },
   },
 };
