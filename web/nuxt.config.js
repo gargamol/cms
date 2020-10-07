@@ -39,6 +39,7 @@ export default {
   apollo: {
     clientConfigs: {
       default: {
+        tokenName: 'token',
         httpEndpoint: process.env.HTTP_ENDPOINT,
         httpLinkOptions: {
           headers: {
