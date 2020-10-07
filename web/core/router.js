@@ -1,4 +1,4 @@
-router = (routes, resolve) => {
+const router = (routes, resolve) => {
   routes.push({
     name: 'Content_Redirect',
     path: '/:id([0-9]{8})',
