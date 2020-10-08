@@ -1,0 +1,148 @@
+html - Common web text formatting and cleanup when dealing with html and xml - mainly just a wrapper for other node packages each
+    htmlEntities
+    xmlEntities
+    stripHtml
+    stripTags
+
+image - set of functions mainly used in the AssetImage resolvers (image needed inflector, inflector needed html - included all for now)
+    create-alt-for
+        takes image (name, caption, fileName) and returns alt text using priority: cleaned caption > cleand name > fileName
+    create-caption-for
+        takes caption and either returns an empty string (if null), or same string with /n converted to <br>
+    create-src-for
+        generates full src url for an image - Takes host, image (filePath, fileName, cropDimensions), options and defaultOptions.  Generates the full url to an image through imgx
+
+inflector - extension of the 'inflected' node package.  General common text manipulation of strings
+    camelize
+    dasherize
+    titleize
+    underscore
+
+object-path-extension
+    A bit of extension of the public 'object-path' node package which it includes.  Used for dealing with referincing, setting, pulling data from an object.
+    object-path facilitates referencing values deep within objects, the extension just adds a bit of conversion and default setting logic
+    For example: you can use object-path's "get" method within the getAsArray in doings so you get the value, and then either cast it as an array or return an empty array if no value was found
+    Was named 'object-path' in base-cms but was confusing sharing a name with the public object-path so I changed the local name
+    @jpdev - some of these files are super small, if not for the whole module.exports of a single function bullshittery, I'd have combined get-as-array and is-array for example already
+    as-array
+        returns either $input if it was an array, or an empty array
+    as-object
+        returns either $input if it was an object, or an empty object
+    is-object
+        returns typeof $input === 'object'
+    get-as-array
+        uses object-path to retrieve a 'deep' value from an object, and then ensures it is an array (or will return an empty array apparently)
+    get-as-object
+        uses object-path to retrieve a 'deep' value from an object, and then ensures it is an object (or will return an empty object apparently)
+    get-last-object
+        @jpdev - its late, wait until I see it used, but skimming code I think it returns the whatever the final object, or after last . without having to know what it is
+        @jpdev - so like you if you wanted mutations.Website.slug and mutations.Website.alias and mutations.Website.primarySite, you could just use this with "mutations.Website" and get all of them, but just guessing atm
+
+query-builders
+
+ref-query-builders
+
+site-context - Used during graph init to inject the Site product details into the overall graph context for some very general but site specific settings
+    index
+        A bit mislabeled, not really an 'index' like other cases.  Essentially is just the Class defintion of a "SiteContext" object which is included/initialized, but then populated by the 'load' method. 
+        @jpdev I'd probably rename this to site-context.js or something better reflecting that it is just a class defintion, but at this point not sure if its expected to be here by other systems, so leaving alone for now
+    load
+        The method that is actually used during root graqph init.  Takes siteId, basedb (base db client class), and tenant.  
+        If no siteId is sent, a generic SiteContext class is created using the default settings from site-context/index.js
+        Otherwise it load the site object queried from the appropriate Platform.Product mongo collection (type:Site, status:1).  
+        Sets name, host, decription, language, imageHost, assetHost, date if present, otherwise defaults used
+
+-----
+
+apply-input
+    Generally used to layer on some options to the query.  Send it your current query, using, input, siteId, siteField (optional).
+    If siteId is defined fill add site.$id to your query (uf siteField left null)
+    Also does something with using&input but not sure what exactly yet
+    @jpdev - assigns a field named $using[key] the value of $input[key] - I think its a way of adding optional arguments to a query based on the incoming gql variables but I need to see it in use more 
+
+as-array
+    exported function that will either cast input as an array, or return an empty array
+
+as-object
+    exported function that will check if input is an object and return it if so, otherwise returns an empty object 
+    @jpdev - what? Is that right? just return an empty object?
+
+connection-projection :
+    Used within allPublishedContent resolver which returns a ContentConnection type.  Takes graqphql introspective 'info' and in conjunction returns an array of which data points the allPublishedContnt resolver should return.
+    Functionally, it adds the projection configuration of one thing (projectUsing=ContentArticle) onto each edge node in the connection, since you aren't doing projetion of the connection itself
+
+create-basedb-client
+    creates, initializes and returns an instance of BaseDB.  It requries a tenant key (and a dbContext but I don't know the purpose/use/need of that atm).
+    Internally it will use MONGO_DSN from .env along with tenant key (in practice parsed from x-tenant-key in headers)
+    Allow slow level interaction with mongo directly as well as use of 0level basic queries (find, findOne, etc) added to basedb class
+    Functionally used mainly within root graph configuation index.js
+
+criteria-for
+    @jpdev - I don't know the actual need, but this keys off one of the refOne (also refMany?) directives using the criteria option.  Ultimately it just enforces an additional set of criteria on results before they are returned
+    @jpdev - Oddly I saw it in the dataloaders code, and all it did was iterate over the resultset and use sift node package to filter out stuff that didn't obey the additional criteria. But why would it be in the result set then?
+    @jpdev - I presume there is some future case where more items are returned than needed for some kind of complex aggregation or something
+    @jpdev - or perhaps this was just a quickfix or patch added to cover some issue where we needed to enforce a minimum level of validation on queries?
+    @jpdev - In the one use case I followed for this, @refOne of primaryImage, criteria of 'AssetImage' was defined in the typeDef, all that did was have critera-for add check the resultset from mongo for type:Image and filter out those that weren't
+    @jpdev - It was used in refMany which does not use dataloader so I'm going to see if that clears things up.
+
+format-status
+    Just converts strings (active/deleted) into numbers (1/0)
+    Used in some cases where we allow users to search by stauts:active as part of a query input, but we want to send status:1 into the actual mongo query
+    ie. refOne directive - query: { ...criteriaFor(criteria), ...formatStatus(input.status) },
+
+get-default-content-types
+    Used within get-published-content-criteria.  Just a list of content types, probably an be pulled from some central place, used as a fallback when no content types are defined for the allPublishedContent query
+
+get-default-taxonomy-types
+
+get-graph-type
+    Used in taxonomy hierarchy resolver.  Like 4 lines, will move into resolver if I don't find it elsewhere.  Either returns type.ofType or type itself if ofType isn't present.
+    Plugged into getProjection the same was AssetImage was sent as return type.  Haven't seen use case for wanting to return a type different than is defined in the typeDef though.
+
+get-projection
+    Currently only used in connection-projection (false also seen in refOne at least)  
+    Different than the '@projection' directive.  Basically returns an array of data points that should be projected for that field.  Most of the time its just the field itself
+    but sometimes like 'hasWebsiteScheduling' projects sectionQuery, 'name' projects name, mutations.Website.name, and mutations.Magazine.name
+    @jpdev - look more into where this is used to understand HOW not just why
+
+    Essentially gets projection configuration of a typeDef.
+    Used in refOne to assemble the union of fields we want to project in (reference? object?) cases.  
+    For example primaryImage returns an AssetImage object. The refOne directive needs the fields from the AssetImage typeDef to be projected as part of its fulfillment of primaryImage.  It figures out what fields to add using get-projection.
+    So basically just gets the fields from related typedefs within the process of resolving a parent typedef
+
+get-published-content-criteria
+    Used within allPublishedContent resolver, essentially converts the allPublishedContentInput (incoming args) type into a mongo query criteria used within basedb. Sets some defaults, and fallbacks, etc
+    @jpdev - expand on inputs pehaps here?
+
+get-website-section-decendant-ids : 
+    getWebsiteSectionDecendantIds : given a website section, return it and all hierarchial children.  Used in allPublishedContent when sectionId is passed within input so it can return content in that section or its children
+
+is-object
+    sent value, returns if typeof === 'object' 
+    @jpdev - why is this a thing?  Other than possibly only checking for typeof if null isn't sent, I don't get why this is not only its own util, but also used farily frequently.  What am I missing?
+
+output
+    @jpdev saw this earlier somewhere, and added the file, was related to displaying console stuff in a neater format, perhaps worth looking into for QOL at some point, otherwise, remove it
+    @jpdev used to write log data to file - useful debugging async stuff?  I don't have implemented but saw used - overrides 'log' method 
+
+request-headers :   parse/init header values for incoming/outgoing requests (x-tenant-key, x-site-id)
+    getRequestHeaders: used during root apollo-server config within root index.js to define tenant and site for use througout system (resolvers, etc)
+    getRequestHeaders: Used during init to parse x-tenant-key and x-site-id and have available in apollo context throughout execution (resolvers, etc)
+    buildRequestHeaders/passRequestHeaders - Seen in express export middleware code in other areas, presumably to facilitate communication between this graphql and an external system
+
+services
+    @jpdev - used during startup, looks to connect to basedb, I didn't port but works fine without - connection pooling?  get rid of?
+
+should-collate
+    Static hard coding of field names, returns true if field you send is in there.  Affects eventual mongo query so sorting is adjusted for apostrophe's and odd outliers like that.
+    Returns true for: name, fullName, filePath, fileName
+
+-----
+
+Notes:
+is-object
+as-object
+as-array
+    Set of functions for checking and converting types, unless we really need, can probably at least combine into one type checker/converting but haven't looked at enough code to say.
+    I duplicated these files used within object-path-extension because I'm not sure they should exist, but if they do its part of that set.  
+    is-object is used fairly frequently within resolvers however so probably worthy of s stand-alone version?
