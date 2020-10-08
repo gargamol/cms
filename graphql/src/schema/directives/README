@@ -1,0 +1,97 @@
+apply-interface
+    Used to add dynamically add all elements present within an interface (ie. Content) to an implementation (ie. ContentArticle)  Basically add a element to the interface, and its available in all implentations of that interface.
+
+array-value
+    Used to translate an array of values from a field on the data to a field in the typeDef.
+
+find-one
+    @jpdev Not implemented yet, used for simple queries
+
+mutated-value
+    used to get alternate versions of the same field.  For example name (could return name, mutations.Website.name, or mutations.Magazine.name)
+
+project-using
+    Adds projectUsing element to objects, basically an extension of projection needed for the Connection case VS a single item (I think)
+    In the ContentConnection case, it sets projectUsing=Content which the connection-projection util uses to eventually project the proper fields for each node depending on their individual type (Article, etc)
+    In the AssetImageConnection case, it uses projectUsing=AssetImage - AssetImage is not an interface so its not needed as a discriminator, 
+    but I presume its meant to say use the set of projection settings of the AssetImage typedef for each edge node in its return.
+    So I guess its an extension of projection, you don't want to project your list of images, you want each image to be projected individually using the projection tags on "AssetImage" in that case.
+
+projection
+    Essentially exposes the element to the response.  TLDR - add @projection to any typedef field you want to be availabe to people hitting the gql endpoint
+    @jpdev - I think its basically shorthand for having to define projection values for every typedef - where its just @projection it just includes itself, other times you can add more to it, but I'm sure there is a 'brute force' way of doing it
+        and this was just an 'elegant' solution to solve a very repetitive task - would explain why literally every one has at least @projection on it.
+        
+    Available Options
+    localfield: if the data element is different than the doctype element name
+        id: Int! @projection(localField: "_id") @value(localField: "_id")
+        The typeDef element 'id' uses the data from our _id mongo field.  Not sure why @value is also needed, perhaps localField is only used to retrieve data internally, but @value is used to assign it to the return 'id' element
+    needs: additional fields needed (normally within resolver functionality) to formulate the actual response you want your resolver to return.  Essentally adds them to this fields' projection pipeline
+        alt: String! @projection(localField: "name", needs: ["caption", "fileName"])
+        The 'alt' element of an AssetImage has a resolver which uses the name field, but conditionally will prefer to clean and use the caption first, then fall back to the name, and finally the fileName.
+        @jpdev - Not sure why localField is 'name' though, mabye you just need to pick one?  The logic in this case prefers caption, so why not localfield caption?  Doesn't seem to matter, but curious.
+
+ref-many
+    More happens under the hood, but ultimately the array of references within the raw data is turned into an array of objects retrieved via subquery in its place
+    ie: images(input: ContentImagesInput = {}): AssetImageConnection! @projection @refMany(model: "platform.Asset", criteria: "assetImage")
+    @jpdev Oddly a bit different than refOne in that it doesn't use dataloaders to cache, it queries directly in the directive.  
+    @jpdev I'd like to know if this was an evolution of refOne when that was deemed unnecessary, or there were complicates in refMany, or refMany is older
+    Arguments
+        model
+            The model name to query: platform.Content, website.Schedule, etc
+        using
+            A query input-to-document map. The key represents the input and the value represents the doc field to apply the input value to
+            @jpdev - found this explanation but want to understand logic still
+            Basically a way to ensure input arguments are added to the query.
+            ie. Will ensure that if its allowed to pass a taxonomy type (only show me bin taxonomy) as an input argument to the gql endpoint, it will be used in what references are returned
+            ie. taxonomy(input: ContentTaxonomyInput = {}): TaxonomyConnection! @projection @refMany(model: "platform.Taxonomy", using: { type: "type" })
+            @jpdev - another side implementation of a query builder concept?  Perhaps a stop along the way to query builders?
+            @jpdev - what you have to use it even if its the same?  for taxonomy its 'type' in the input and 'type' in the document?  Just done for consistency in that case???
+            @jpdev - I guess so, logic will just add an key/value pair to the query with a key name of 'type', and use the value from the input argument called 'type' - seems convoluted atm
+ 
+        criteria
+            A query criteria key. If present in utils/criteria-for.js, will apply the criteria found to the query. Applies some minimal criteria for referenced object
+            Currently supported minimal criteria are: assetImage, brevityCollection, configurationThemeIcarus, content, taxonomy, emailNewsletter, entityOrganization, entityVenue, globalMagazineSection, issueMagazineSection,
+                magazinePublication, rootTaxonomies, rootTaxonomiesOfType, rootWebsiteSection, websiteSite,
+        withSite
+            optionally adds site.$id criteria to the reference.  Not used by default, but perhaps has a use within multi-site (saw use in allCompanyContent query)
+        siteField
+            used in conjunction along withSite to add site criteria to a reference lookup - defaults to site.$id (within directive defintion) in most cases, but is set to mutation.Website.primarySite in the case of page typeDef
+        localField
+            override of the typedef name, used to define what field to query in mongo when it differs. ie: deck: String @projection(localField: "mutations.Magazine.deck").  Not really used in references in our case but use is the same
+        foreignField
+            foreignField is the 'target' element of the reference, defaults to _id in most cases (within directive definition)
+            so within a section resolution, using a section id to find its parent has a localField of "_id" and and foreignField of "parent.$id"
+            ie: simple case - the mongo image data is jsut an array of integers that line up with _id within platformAsset, so no need to mess with localField/foreignField
+                images(input: ContentImagesInput = {}): AssetImageConnection! @projection @refMany(model: "platform.Asset", criteria: "assetImage")
+            ie: children element of taxonomy typdef uses the _id field to look up references where parent.$id lines up
+                children(input: TaxonomyChildrenInput = {}): TaxonomyConnection! @projection(localField: "_id") @refMany(model: "platform.Taxonomy", localField: "_id", foreignField: "parent.$id")
+        refQueryBuilder
+            A query builder key. If present in utils/ref-query-builders/index.js, will invoke the function and return the modified query object.
+            In almost every case its either not needed or does nothing (query defined within ref-many is used alone), when used converts very specific input cases into what mongo will expect.
+            For example if an argument of "rootOnly=true" is part of the input during a websiteSection reference lookup, it will only return sections where parent.$id does not exist.
+            Supported specialized querybuilders are: brevityCollectionIssues, websiteSiteSections
+            @jpdev - canidate for simplification?
+
+ref-one
+    Used to perform a subquery lookup of an object based on referenceId (ie primaryImage)  Runs through keyed dataloader to implement some caching for minimizing mongo reqs
+    Most common use is to send loader to cache, and criteria to set minimal validation on results
+    ie: primaryImage: AssetImage @projection @refOne(loader: "platformAsset", criteria: "assetImage")
+    Arguments
+        loader
+            dataloader 'key' to store queried results in.  Essentially the cache bucket to improve performane of looking up references.
+            Currently supported loader keys are: platformAsset, platformContent, platformEntity, platformProduct, platformTaxonomy, platformUser, websiteOption, websiteSection, magazineIssue, magazineSection, emailSection,
+        localField
+            override of the typedef name, used to define what field to query in mongo when it differs. ie: deck: String @projection(localField: "mutations.Magazine.deck").  Not really used in references in our case but use is the same
+        criteria
+            applies some minimal criteria for referenced object.  Uses utils/critera-for to define what minimal means for each case.  Criteria value is the key that defines which one in that class to use for each refOne instance
+            Currently supporder minimal criteria are: assetImage, brevityCollection, configurationThemeIcarus, content, taxonomy, emailNewsletter, entityOrganization, entityVenue, globalMagazineSection, issueMagazineSection,
+                magazinePublication, rootTaxonomies, rootTaxonomiesOfType, rootWebsiteSection, websiteSite,
+        withSite
+            optionally adds site.$id criteria to the reference.  Not used by default, but perhaps has a use within multi-site (saw use in allCompanyContent query)
+        siteField
+            used in conjunction along withSite to add site criteria to a reference lookup - defaults to site.$id (within directive defintion) in most cases, but is set to mutation.Website.primarySite in the case of page typeDef
+
+value
+    Used to translate a value from a field on the data to a field in the typeDef.  Basic example is the id typeDef which uses @value(localField: "_id").  
+    Also supports a 'fallbackField' ability for a secondary data point to use if first is emtpy
