@@ -4,9 +4,10 @@
   "description": "Supports the Ecommerce site with a back end to handle payments and logins services.",
   "main": ".eslintrc.js",
   "scripts": {
-    "start": "node_modules/.bin/nodemon src/index.js",
+    "dev": "node_modules/.bin/nodemon src/index.js",
     "test": "node_modules/.bin/eslint .",
-    "unit-test": "jest"
+    "unit-test": "jest",
+    "start": "node src/index.js"
   },
   "author": "Jeremy Laird",
   "license": "ISC",
@@ -36,12 +37,12 @@
     "object-path": "^0.11.4",
     "sift": "^13.3.5",
     "stripe": "^8.52.0",
-    "striptags": "^3.1.1"
+    "striptags": "^3.1.1",
+    "nodemon": "^2.0.4"
   },
   "devDependencies": {
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^14.1.0",
-    "eslint-plugin-import": "^2.20.1",
-    "nodemon": "^2.0.4"
+    "eslint-plugin-import": "^2.20.1"
   }
 }

@@ -1,11 +1,15 @@
-FROM node:12.16.3
+# dev-stage
+FROM node:12.16.3 AS dev-stage
 WORKDIR /app
-ENV NODE_ENV production
-ENV YARN_CACHE_FOLDER /yarn
+COPY package.json ./
+COPY . .
+# `yarn install` will run every time we start the container. We're using yarn because it's much faster than npm when there's nothing new to install
+CMD ["sh", "-c", "yarn install && yarn dev"]
 
-ADD . /app/
-RUN mkdir -p $YARN_CACHE_FOLDER
-RUN yarn --production --pure-lockfile
-
+# production-stage
+FROM node:12.16.3 AS production-stage
 WORKDIR /app
-ENTRYPOINT [ "node", "/app/src/index.js" ]
+COPY package.json ./
+RUN yarn install
+COPY . .
+CMD ["sh", "-c", "yarn start"]
