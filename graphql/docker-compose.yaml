@@ -1,21 +1,12 @@
 # for local development
-version: '3.7'
-services:
-  # vue:
+# version: '3.7'
+# services:
+  # graph:
   #   image: node:12.16.3
   #   ports:
-  #   - '80:8080'
+  #   - '4000:4000'
   #   volumes:
-  #   - './vue:/app'
+  #   #- './graphql:/app'
+  #   - './:/app'
   #   working_dir: '/app'
   #   command: /bin/sh -c "yarn run start"
-
-  graph:
-    image: node:12.16.3
-    ports:
-    - '4000:4000'
-    volumes:
-    #- './graphql:/app'
-    - './:/app'
-    working_dir: '/app'
-    command: /bin/sh -c "yarn run start"
