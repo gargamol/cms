@@ -49,7 +49,6 @@ export default {
 }
 .addRow {
   display: inline-block;
-  width: 10px;
   padding: 20px;
 }
 </style>

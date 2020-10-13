@@ -149,7 +149,7 @@ export default {
 .pod {
   width: 100%;
   font-family: arial;
-  border: 1px solid #ccc;
+  border: 1px solid #999;
   border-radius: 4px 4px 0 0;
 }
 .top {

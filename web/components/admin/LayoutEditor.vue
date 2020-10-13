@@ -30,7 +30,7 @@ module.exports = {
                     {
                       type: 'gam_ad',
                       settings: {
-                        ad_unit_pattern: 'leaderboard_1',
+                        ad_unit_pattern: 'leaderboard_2',
                       },
                     },
                   ],

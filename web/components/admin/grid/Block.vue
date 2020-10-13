@@ -43,6 +43,9 @@ export default {
     },
   },
   methods: {
+    hover() {
+      this.$emit('onHover', this.targetIndex);
+    },
     sortUp: function () {
       var newGrid = { ...this.grid };
       newGrid.rows[this.rowIndex].columns[this.colIndex].blocks.splice(

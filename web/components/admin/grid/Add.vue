@@ -19,7 +19,10 @@ export default {
   },
   methods: {
     add() {
-      this.$emit('onAdd', this.targetIndex);
+      if (typeof this.$listeners.onAdd === 'function') {
+        alert('exists! ' + typeof this.$listeners.onAdd);
+        this.$emit('onAdd', this.targetIndex);
+      }
     },
   },
 };

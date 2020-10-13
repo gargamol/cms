@@ -18,7 +18,7 @@
           :grid="grid"
           :updateGrid="updateGrid"
         />
-        <div class="addBlock"><Add :targetIndex="index + 1" @onAdd="addRow" /></div>
+        <div class="addBlock"><Add :targetIndex="index + 1" @onAdd="addBlock" /></div>
       </div>
     </Pod>
   </div>
@@ -51,14 +51,23 @@ export default {
     addBlock: function () {
       alert('adding');
     },
-    sortLeft: function () {
+    updateLayout: function () {
       var newGrid = { ...this.grid };
+      if (newGrid.rows[this.rowIndex].layout === '1_2') {
+        newGrid.rows[this.rowIndex].layout === '2_1';
+      } else if (newGrid.rows[this.rowIndex].layout === '2_1') {
+        newGrid.rows[this.rowIndex].layout === '1_2s';
+      }
+      return newGrid;
+    },
+    sortLeft: function () {
+      var newGrid = this.updateLayout();
       newGrid.rows[this.rowIndex].columns.splice(
         this.colIndex - 1,
         0,
         newGrid.rows[this.rowIndex].columns.splice(this.colIndex, 1)[0]
       );
-      this.updateGrid(newGrid);
+      this.updateLayout(newGrid);
     },
     sortRight: function () {
       var newGrid = { ...this.grid };
@@ -67,7 +76,7 @@ export default {
         0,
         newGrid.rows[this.rowIndex].columns.splice(this.colIndex, 1)[0]
       );
-      this.updateGrid(newGrid);
+      this.updateLayout(newGrid);
     },
     edit: function () {
       alert('editing ' + this.colIndex);
