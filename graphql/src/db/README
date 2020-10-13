@@ -1,0 +1,13 @@
+index : Used to be the local db wrapper which pulled in the db package - ultimately creates the BaseDB object which includes a MongoClient connection to the right server, and some initization work done
+
+db: Used to be the index.js of the db package, really only includes the other 4 files from the db package and exports their methods/classes
+
+create-basedb : pretty much just adds/setup logger to the BaseDB class
+
+basedb : MUCH larger set of functions than just creating connections, selecting databases, collections, queries, all low level query with base4 mongo
+
+create-mongo-client : general mongo client connection settings, rarely modified from defaults
+
+mongodb : stock mongo base level commands
+
+paginate : set of files standardizing how cursor, endCursor, hasNextPage, etc format is done for all respones that require pagination
