@@ -1040,6 +1040,16 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
+"@iconify-icons/mdi@^1.0.14":
+  version "1.0.14"
+  resolved "https://registry.yarnpkg.com/@iconify-icons/mdi/-/mdi-1.0.14.tgz#c3b2073407df651ee429318783165d508cb34fcd"
+  integrity sha512-pHDy1XSxMMMfXIKCvLgafmuuVIbyHngAJ5yhr5Kw/gEmtTqZ6sEjtdvVkjAoByrcB5cvKcNCdPxubnTtfAb7eA==
+
+"@iconify/vue@^1":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@iconify/vue/-/vue-1.0.5.tgz#482fc7cf656d81dc8ccd121d9aa5971be8f7b41b"
+  integrity sha512-11O+nZJPr9OhjgtEFArR6xz++THkORAUbrSj6+3waRn+HR7375f8vyydHaFwHcPIrI0dzkpDyb+4Jd1L1JtSGQ==
+
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@istanbuljs/load-nyc-config/-/load-nyc-config-1.1.0.tgz#fd3db1d59ecf7cf121e80650bb86712f9b55eced"
