@@ -1,5 +1,5 @@
 <template>
-  <iconify-icon class="icon" width="18" icon="plusCircle" :inline="true" v-on:click="add" />
+  <iconify-icon class="icon" width="18" icon="plusCircle" :inline="true" @click="add" />
 </template>
 
 <script>
@@ -13,8 +13,13 @@ export default {
     IconifyIcon,
   },
   props: {
-    add: {
-      type: Function,
+    targetIndex: {
+      type: Number,
+    },
+  },
+  methods: {
+    add() {
+      this.$emit('onAdd', this.targetIndex);
     },
   },
 };

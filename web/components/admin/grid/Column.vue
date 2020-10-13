@@ -8,7 +8,7 @@
       :title="'Column ' + (colIndex + 1)"
       :settings="column.settings"
     >
-      <div class="addBlock"><Add v-on:click="addBlock" /></div>
+      <div class="addBlock"><Add :targetIndex="index" /></div>
       <template v-for="(block, index) in column.blocks">
         <Block
           :rowIndex="rowIndex"
@@ -17,7 +17,7 @@
           :grid="grid"
           :updateGrid="updateGrid"
         />
-        <div class="addBlock"><Add v-on:click="addBlock" /></div>
+        <div class="addBlock"><Add :targetIndex="index + 1" /></div>
       </template>
     </Pod>
   </div>

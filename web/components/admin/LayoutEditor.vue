@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="layout_editor">
     <h3>Layout Editor</h3>
     <Grid :grid="page.primaryLayout" :updateGrid="updateGrid"> </Grid>
   </div>
@@ -394,3 +394,9 @@ module.exports = {
   },
 };
 </script>
+
+<style>
+.layout_editor {
+  min-width: 1300px;
+}
+</style>

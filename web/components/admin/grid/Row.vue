@@ -9,7 +9,7 @@
   >
     <div class="row">
       <div class="addColumn" v-if="grid.rows[rowIndex].columns.length < 3">
-        <Add v-on:click="addColumn" />
+        <Add :targetIndex="index" />
       </div>
       <template v-for="(column, index) in grid.rows[rowIndex].columns">
         <Column
@@ -20,7 +20,7 @@
           :updateGrid="updateGrid"
         />
         <div class="addColumn" v-if="grid.rows[rowIndex].columns.length < 3">
-          <Add v-on:click="addColumn" />
+          <Add :targetIndex="index + 1" />
         </div>
       </template>
     </div>
@@ -76,9 +76,7 @@ export default {
       if (confirm('Are you sure you wish to delete this row?')) {
         var newGrid = { ...this.grid };
         newGrid.rows.splice(this.rowIndex, 1);
-        setTimeout(function () {
-          this.updateGrid(newGrid);
-        }, 300);
+        this.updateGrid(newGrid);
       }
     },
   },

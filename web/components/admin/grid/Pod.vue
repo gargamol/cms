@@ -129,13 +129,11 @@ export default {
             ] = this.settings[key][valKey];
           });
         }
-        console.log('currValue', currValue);
         adjustedSettings[
           key.replace(/_/gi, ' ').replace(/\b\w/g, (l) => l.toUpperCase())
         ] = currValue;
       });
     }
-    console.log('adjusted', this.settings, adjustedSettings);
     return {
       iconWidth: 16,
       adjustedSettings,
