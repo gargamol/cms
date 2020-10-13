@@ -1,7 +1,7 @@
 <template>
   <div>
     <ApolloMutation
-      :mutation="require('../graphql/mutaion/login.gql')"
+      :mutation="require('../graphql/mutation/login.gql')"
       :variables="{ username, password }"
       @done="onDone"
     >
@@ -17,7 +17,7 @@
           />
 
           <input
-            id="passworld"
+            id="password"
             v-model="password"
             type="password"
             placeholder="Enter Password"
