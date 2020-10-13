@@ -1,5 +1,5 @@
 <template>
-  <div class="pod">
+  <div :class="['pod', 'tier' + tier]">
     <div class="top">
       <div class="title">{{ title }}</div>
       <iconify-icon
@@ -115,6 +115,9 @@ export default {
     settings: {
       type: Object,
     },
+    tier: {
+      type: Number,
+    },
   },
   data: function () {
     var adjustedSettings = {};
@@ -146,14 +149,24 @@ export default {
 .pod {
   width: 100%;
   font-family: arial;
+  border: 1px solid #ccc;
+  border-radius: 4px 4px 0 0;
 }
 .top {
-  background-color: #dae4eb;
   font-size: 12px;
-  border: 1px solid #888;
   padding: 8px;
   display: flex;
   text-align: right;
+  border-radius: 4px 4px 0 0;
+}
+.pod.tier1 .top {
+  background-color: #b2c5d1;
+}
+.pod.tier2 .top {
+  background-color: #c5d4de;
+}
+.pod.tier3 .top {
+  background-color: #dae4eb;
 }
 .title {
   width: 100%;
@@ -162,14 +175,12 @@ export default {
 }
 .bottom {
   padding: 14px;
-  border-width: 0px 1px 1px 1px;
-  border-radius: 0 0 4px 4px;
-  border-color: #888;
-  border-style: solid;
 }
 .settings {
   text-align: left;
   font-size: 12px;
+  max-width: 100%;
+  overflow: auto;
 }
 .label {
   display: inline-block;

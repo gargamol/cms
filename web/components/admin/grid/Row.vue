@@ -5,24 +5,24 @@
     :edit="edit"
     :remove="remove"
     :title="'Row ' + (rowIndex + 1)"
-    :settings="grid.rows[rowIndex].settings"
+    :settings="row.settings"
+    :tier="1"
+    class="wrapper"
   >
     <div class="row">
-      <div class="addColumn" v-if="grid.rows[rowIndex].columns.length < 3">
-        <Add :targetIndex="index" />
-      </div>
-      <template v-for="(column, index) in grid.rows[rowIndex].columns">
-        <Column
-          :blocks="column.blocks"
-          :rowIndex="rowIndex"
-          :colIndex="index"
-          :grid="grid"
-          :updateGrid="updateGrid"
-        />
-        <div class="addColumn" v-if="grid.rows[rowIndex].columns.length < 3">
-          <Add :targetIndex="index + 1" />
+      <div
+        :class="['column', 'layout' + row.layout, 'col' + index]"
+        :key="'col' + Math.random()"
+        v-for="(column, index) in row.columns"
+      >
+        <div class="addColumn" v-if="index === 0 && row.columns.length < 3">
+          <Add :targetIndex="index" @onAdd="addColumn" />
         </div>
-      </template>
+        <Column :rowIndex="rowIndex" :colIndex="index" :grid="grid" :updateGrid="updateGrid" />
+        <div class="addColumn" v-if="row.columns.length < 3">
+          <Add :targetIndex="index + 1" @onAdd="addColumn" />
+        </div>
+      </div>
     </div>
   </Pod>
 </template>
@@ -30,6 +30,10 @@
 <script>
 import Column from './Column.vue';
 import Pod from './Pod.vue';
+
+var emptyColumn = {
+  blocks: [],
+};
 
 export default {
   components: {
@@ -51,11 +55,24 @@ export default {
   data: function () {
     return {
       expanded: true,
+      row: this.grid.rows[this.rowIndex],
     };
   },
   methods: {
-    addColumn: function () {
-      alert('adding');
+    addColumn: function (index) {
+      // Calculate new grid
+      var newGrid = JSON.parse(JSON.stringify(this.grid));
+      newGrid.rows[this.rowIndex].columns.splice(index, 0, { ...emptyColumn });
+
+      // Determine new row layout
+      if (newGrid.rows[this.rowIndex].columns.length === 2) {
+        newGrid.rows[this.rowIndex].layout = '1_1';
+      }
+      if (newGrid.rows[this.rowIndex].columns.length === 3) {
+        newGrid.rows[this.rowIndex].layout = '1_1_1';
+      }
+
+      this.updateGrid(newGrid);
     },
     sortUp: function () {
       var newGrid = { ...this.grid };
@@ -88,5 +105,27 @@ export default {
   display: flex;
   align-items: center;
   width: 100%;
+}
+.column {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+.addColumn {
+}
+.layout1_2.col0 {
+  width: 33%;
+}
+.layout1_2.col1 {
+  width: 67%;
+}
+.layout2_1.col0 {
+  width: 67%;
+}
+.layout2_1.col1 {
+  width: 33%;
+}
+.layout_1_1_1 {
+  width: 33%;
 }
 </style>

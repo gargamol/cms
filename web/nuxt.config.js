@@ -5,24 +5,27 @@ export default {
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
     title: 'websites',
-    meta: [{
-        charset: 'utf-8'
+    meta: [
+      {
+        charset: 'utf-8',
       },
       {
         name: 'viewport',
-        content: 'width=device-width, initial-scale=1'
+        content: 'width=device-width, initial-scale=1',
       },
       {
         hid: 'description',
         name: 'description',
-        content: ''
+        content: '',
       },
     ],
-    link: [{
-      rel: 'icon',
-      type: 'image/x-icon',
-      href: '/favicon.ico'
-    }],
+    link: [
+      {
+        rel: 'icon',
+        type: 'image/x-icon',
+        href: '/favicon.ico',
+      },
+    ],
   },
 
   // Global CSS (https://go.nuxtjs.dev/config-css)
@@ -42,7 +45,7 @@ export default {
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {
-    transpile: ['@iconify-icons/mdi']
+    transpile: ['@iconify-icons/mdi'], // This fixed the Unexpected token 'export' error we were getting
   },
 
   server: {

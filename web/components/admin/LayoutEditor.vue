@@ -38,7 +38,7 @@ module.exports = {
               ],
             },
             {
-              layout: '1_2',
+              layout: '2_1',
               columns: [
                 {
                   blocks: [
@@ -184,7 +184,7 @@ module.exports = {
               ],
             },
             {
-              layout: '1_2',
+              layout: '2_1',
               columns: [
                 {
                   blocks: [
@@ -394,9 +394,3 @@ module.exports = {
   },
 };
 </script>
-
-<style>
-.layout_editor {
-  min-width: 1300px;
-}
-</style>

@@ -9,6 +9,7 @@
       :remove="remove"
       :title="'Block ' + (blockIndex + 1) + ' - ' + block.type"
       :settings="block.settings"
+      :tier="3"
     >
     </Pod>
   </div>

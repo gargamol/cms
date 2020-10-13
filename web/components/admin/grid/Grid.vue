@@ -1,10 +1,10 @@
 <template>
   <div class="container">
-    <template v-for="(row, index) in grid.rows">
+    <div :key="'row' + Math.random()" v-for="(row, index) in grid.rows">
       <div class="addRow" v-if="index == 0"><Add :targetIndex="index" @onAdd="addRow" /></div>
       <Row :grid="grid" :rowIndex="index" :updateGrid="updateGrid" />
       <div class="addRow"><Add :targetIndex="index + 1" @onAdd="addRow" /></div>
-    </template>
+    </div>
   </div>
 </template>
 
@@ -14,11 +14,7 @@ import Row from './Row.vue';
 var emptyRow = {
   columns: [
     {
-      blocks: [
-        {
-          type: 'new',
-        },
-      ],
+      blocks: [],
     },
   ],
 };
@@ -38,9 +34,8 @@ export default {
   },
   methods: {
     addRow: function (index) {
-      var newGrid = { ...this.grid };
+      var newGrid = JSON.parse(JSON.stringify(this.grid));
       newGrid.rows.splice(index, 0, { ...emptyRow });
-      console.log('grid', this.grid, newGrid);
       this.updateGrid(newGrid);
     },
   },

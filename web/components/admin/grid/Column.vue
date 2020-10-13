@@ -7,9 +7,10 @@
       :remove="grid.rows[rowIndex].columns.length > 1 ? remove : undefined"
       :title="'Column ' + (colIndex + 1)"
       :settings="column.settings"
+      :tier="2"
     >
-      <div class="addBlock"><Add :targetIndex="index" /></div>
-      <template v-for="(block, index) in column.blocks">
+      <div class="addBlock"><Add :targetIndex="0" /></div>
+      <div :key="Math.random()" v-for="(block, index) in column.blocks">
         <Block
           :rowIndex="rowIndex"
           :colIndex="colIndex"
@@ -17,8 +18,8 @@
           :grid="grid"
           :updateGrid="updateGrid"
         />
-        <div class="addBlock"><Add :targetIndex="index + 1" /></div>
-      </template>
+        <div class="addBlock"><Add :targetIndex="index + 1" @onAdd="addRow" /></div>
+      </div>
     </Pod>
   </div>
 </template>
@@ -75,12 +76,19 @@ export default {
     remove: function () {
       this.expanded = false;
       if (confirm('Are you sure you wish to delete this column?')) {
+        // Calculate new grid
         var newGrid = { ...this.grid };
-        console.log('new grid', newGrid);
         newGrid.rows[this.rowIndex].columns.splice(this.colIndex, 1);
-        setTimeout(function () {
-          this.updateGrid(newGrid);
-        }, 300);
+
+        // Determine new row layout
+        if (newGrid.rows[this.rowIndex].columns.length === 2) {
+          newGrid.rows[this.rowIndex].layout = '1_1';
+        }
+        if (newGrid.rows[this.rowIndex].columns.length === 1) {
+          delete newGrid.rows[this.rowIndex].layout;
+        }
+
+        this.updateGrid(newGrid);
       }
     },
   },
