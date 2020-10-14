@@ -4,16 +4,12 @@ const connectionProjection = require('../../../utils/connection-projection.js');
 
 class ResolverLogic {
 
-  static async getContentItem(parent, variables, context, info) {
+  static async getContentExample(parent, variables, context, info) {
 
     const { input } = variables;
     const { basedb } = context;
 
     // Retrieve the content document.
-    // @jpdev - 3rd param is 'options' - prob used for tweaking the query through middleware
-    //   need to look at examples or find a case we need to use
-    // @jpdev - saw {projection: { _id: 1, relatedTo: 1, 'mutations.Website.primarySection': 1 }}
-    //   perhaps to select fields to return?
     const contentId = input.id;
     const doc = await basedb.findById('platform.Content', contentId, {});
 
@@ -25,7 +21,7 @@ class ResolverLogic {
   /**
     *
    */
-  static async allPublishedContent(parent, variables, context, info) {
+  static async getContentStream(parent, variables, context, info) {
 
     const { input } = variables;
     const { basedb, site } = context;

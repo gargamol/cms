@@ -15,7 +15,7 @@ const contentResolvers = {
   },
 
   Query: {
-    getContentExample: (parent, variables, context, info) => ResolverLogic.getContentItem(parent, variables, context, info),
+    getContentExample: (parent, variables, context, info) => ResolverLogic.getContentExample(parent, variables, context, info),
     getContentStream: (parent, variables, context, info) => ResolverLogic.allPublishedContent(parent, variables, context, info),
   },
 };
