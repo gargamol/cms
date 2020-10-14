@@ -15,7 +15,7 @@ const contentDefinitions = gql`
     # @jpdev - not sure what the @findone directive does, b4 did - prob params used to select right db, format query sent to mongo, etc
     getContentExample(input: ContentQueryInput = {}): Content
 
-    getContentItem(input: ContentQueryInput = {}): Content
+    getContent(input: ContentQueryInput = {}): Content
     @findOne(
       model: "platform.Content"
       using: { id: "_id" }

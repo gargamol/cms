@@ -2,6 +2,7 @@ const ApplyInterfaceDirective = require('./apply-interface');
 const ProjectUsing = require('./project-using');
 const Projection = require('./projection');
 const Value = require('./value');
+
 const MutatedValue = require('./mutated-value');
 const ArrayValue = require('./array-value');
 
@@ -9,6 +10,8 @@ const FindOne = require('./find-one');
 
 const RefOne = require('./ref-one');
 const RefMany = require('./ref-many');
+
+const MomentFormat = require('./moment-format');
 
 module.exports = {
   applyInterfaceFields: ApplyInterfaceDirective,
@@ -22,4 +25,6 @@ module.exports = {
 
   refOne: RefOne,
   refMany: RefMany,
+
+  momentFormat: MomentFormat,
 };
