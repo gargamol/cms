@@ -5,6 +5,8 @@ const Value = require('./value');
 const MutatedValue = require('./mutated-value');
 const ArrayValue = require('./array-value');
 
+const FindOne = require('./find-one');
+
 const RefOne = require('./ref-one');
 const RefMany = require('./ref-many');
 
@@ -15,6 +17,8 @@ module.exports = {
   value: Value,
   mutatedValue: MutatedValue,
   arrayValue: ArrayValue,
+
+  findOne: FindOne,
 
   refOne: RefOne,
   refMany: RefMany,

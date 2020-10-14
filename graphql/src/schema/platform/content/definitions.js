@@ -1,10 +1,10 @@
 const { gql } = require('apollo-server');
 
 // Content is abstract with 'type' discriminator, so start with common structure interface
-const contentInterface = require('./interface');
+const contentInterfaces = require('./interfaces');
 
 // Include all of the discriminated types with their specific definitions
-const contentTypes = require('./types');
+const contentTypes= require('./types/definitions');
 
 const contentDefinitions = gql`
 
@@ -13,9 +13,9 @@ const contentDefinitions = gql`
   extend type Query {
 
     # @jpdev - not sure what the @findone directive does, b4 did - prob params used to select right db, format query sent to mongo, etc
-    getContentItem(input: ContentQueryInput = {}): Content
+    getContentExample(input: ContentQueryInput = {}): Content
 
-    getContentItemOriginal(input: ContentQueryInput = {}): Content
+    getContentItem(input: ContentQueryInput = {}): Content
     @findOne(
       model: "platform.Content"
       using: { id: "_id" }
@@ -24,7 +24,7 @@ const contentDefinitions = gql`
       withSite: false # allow content to always load, regardless of site context.
     )
 
-    allPublishedContent(input: AllPublishedContentQueryInput = {}): ContentConnection!
+    getContentStream(input: AllPublishedContentQueryInput = {}): ContentConnection!
 
   }
   # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -147,6 +147,11 @@ const contentDefinitions = gql`
     surveyId: String
   }
 
+  type ContentStubLocation {
+    latitude: Float
+    longitude: Float
+  }
+
   enum GateableUserRole {
     ROLE_REGISTERED
   }
@@ -204,7 +209,7 @@ const contentDefinitions = gql`
 
   # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   # Include Content Interface for the abstract level common defintions
-  ${contentInterface}
+  ${contentInterfaces}
   # Include the type specific implementations of each content type from the types subdirectory
   ${contentTypes}
   # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -399,10 +404,7 @@ module.exports = {
 //   path: String!
 // }
 
-// type ContentStubLocation {
-//   latitude: Float
-//   longitude: Float
-// }
+
 
 // type ContentWebsiteSchedule {
 //   section: WebsiteSection @refOne(loader: "websiteSection", localField: "sectionId")

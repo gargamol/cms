@@ -5,7 +5,7 @@ const formatStatus = require('../../utils/format-status');
 const criteriaFor = require('../../utils/criteria-for');
 const applyInput = require('../../utils/apply-input');
 const getProjection = require('../../utils/get-projection');
-const buildQuery = require('../../query-builders');
+const buildQuery = require('../../utils/query-builders');
 
 class FindOneDirective extends SchemaDirectiveVisitor {
   /**
