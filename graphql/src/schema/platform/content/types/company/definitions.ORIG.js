@@ -3,7 +3,8 @@ const gql = require('graphql-tag');
 module.exports = gql`
 
 extend type Query {
-  getContentCompany(input: ContentCompanyQueryInput!): ContentCompany @findOne(model: "platform.Content", using: { id: "_id" }, criteria: "contentCompany")
+  # @jpdev - do we prefer all one line, or with linebreaks for the directive?  (see ../article/article.js)
+  getCompany(input: ContentCompanyQueryInput!): ContentCompany @findOne(model: "platform.Content", using: { id: "_id" }, criteria: "contentCompany")
 }
 
 # extend type Mutation {
@@ -19,52 +20,107 @@ extend type Query {
 type ContentCompany implements Content @applyInterfaceFields {
   # fields directly on platform.model::Content\Company
   companyType: String @projection
-  #parentCompany(input: ContentCompanyParentCompanyInput = {}): ContentCompany @projection @refOne(loader: "platformContent" criteria: "contentCompany")
-  #brandsCarried(input: ContentCompanyBrandsCarriedInput = {}): ContentCompanyConnection! @projection @refMany(model: "platform.Content" criteria: "contentCompany")
-  #statesServed: [String]! @projection @arrayValue
-  #companyCompetitors(input: ContentCompanyCompanyCompetitorsInput = {}): ContentCompanyConnection! @projection @refMany(model: "platform.Content", criteria: "contentCompany")
+  parentCompany(input: ContentCompanyParentCompanyInput = {}): ContentCompany @projection @refOne(loader: "platformContent" criteria: "contentCompany")
+  brandsCarried(input: ContentCompanyBrandsCarriedInput = {}): ContentCompanyConnection! @projection @refMany(model: "platform.Content" criteria: "contentCompany")
+  statesServed: [String]! @projection @arrayValue
+  companyCompetitors(input: ContentCompanyCompanyCompetitorsInput = {}): ContentCompanyConnection! @projection @refMany(model: "platform.Content", criteria: "contentCompany")
 
-  #numberOfEmployees: String @projection
-  #trainingInformation: String @projection
-  #yearsInOperation: String @projection
-  #salesRegion: String @projection
-  #servicesProvided: String @projection
-  #salesChannels: String @projection
-  #productSummary: String @projection
-  #serviceInformation: String @projection
-  #warrantyInformation: String @projection
+  numberOfEmployees: String @projection
+  trainingInformation: String @projection
+  yearsInOperation: String @projection
+  salesRegion: String @projection
+  servicesProvided: String @projection
+  salesChannels: String @projection
+  productSummary: String @projection
+  serviceInformation: String @projection
+  warrantyInformation: String @projection
 
-  #youtube: ContentCompanyYoutube! @projection
+  # @jpdev - is this used?
+  youtube: ContentCompanyYoutube! @projection
+  
+  # @jpdev - @jpdisable - google-data-api
+  # @jpdev - This uses definitions/resolvers outside of base entirely, hits google data api to get playlist data from a youtube channel, not sure if we use/support, sounds cool but disabling while doing platform for now
   #youtubeVideos(input: ContentCompanyYoutubeVideosInput = {}): YoutubePlaylistConnection! @projection(needs: ["youtube"])
-  #externalLinks(input: ContentCompanyExternalLinksInput = {}): [EntityStubExternalLink]! @projection
+  
+   # @jpdev - is this used?
+  externalLinks(input: ContentCompanyExternalLinksInput = {}): [EntityStubExternalLink]! @projection
 
   ## fields directly on platform.model::Content\Company from mutations
-  #featuredCategories(input: ContentCompanyFeaturedCategoriesInput = {}): TaxonomyConnection! @projection(localField: "mutations.Website.featuredCategories") @refMany(model: "platform.Taxonomy", localField: "mutations.Website.featuredCategories", criteria: "taxonomyCategory")
+  featuredCategories(input: ContentCompanyFeaturedCategoriesInput = {}): TaxonomyConnection! @projection(localField: "mutations.Website.featuredCategories") @refMany(model: "platform.Taxonomy", localField: "mutations.Website.featuredCategories", criteria: "taxonomyCategory")
   }
 
-# type ContentCompanyYoutube {
-#   username: String
-#   channelId: String
-#   playlistId: String
-#   videos: [String!]
-#   url: String
-# }
 
-# type ContentCompanyConnection {
-#   totalCount: Int!
-#   edges: [ContentCompanyEdge]!
-#   pageInfo: PageInfo!
-# }
 
-# type ContentCompanyEdge {
-#   node: ContentCompany!
-#   cursor: String!
-# }
+type ContentCompanyConnection {
+  totalCount: Int!
+  edges: [ContentCompanyEdge]!
+  pageInfo: PageInfo!
+}
+
+type ContentCompanyEdge {
+  node: ContentCompany!
+  cursor: String!
+}
 
 input ContentCompanyQueryInput {
   id: Int!
   status: ModelStatus = active
 }
+
+input ContentCompanyParentCompanyInput {
+  status: ModelStatus = active
+}
+
+input ContentCompanyBrandsCarriedInput {
+  status: ModelStatus = active
+  sort: ContentCompanySortInput = {}
+  pagination: PaginationInput = {}
+}
+
+input ContentCompanySortInput {
+  field: ContentSortField = id
+  order: SortOrder = desc
+}
+
+input ContentCompanyCompanyCompetitorsInput {
+  status: ModelStatus = active
+  sort: ContentCompanySortInput = {}
+  pagination: PaginationInput = {}
+}
+
+# @jpdev - do we even use this?
+type ContentCompanyYoutube {
+  username: String
+  channelId: String
+  playlistId: String
+  videos: [String!]
+  url: String
+}
+
+# @jpdev - part of the google-data-api playlist listing thing I have disabled, so disabling this as well for now
+# input ContentCompanyYoutubeVideosInput {
+#   pagination: PaginationInput = {}
+# }
+
+# @jpdev - these are so closely named, do we really need both?
+input ContentCompanyExternalLinkInput {
+  key: String!
+  url: String!
+  label: String
+}
+
+input ContentCompanyExternalLinksInput {
+  keys: [String]
+}
+
+
+
+input ContentCompanyFeaturedCategoriesInput {
+  status: ModelStatus = active
+  sort: TaxonomySortInput = {}
+  pagination: PaginationInput = {}
+}
+
 
 # input UpdateContentCompanyMutationInput {
 #   id: Int!
@@ -137,51 +193,24 @@ input ContentCompanyQueryInput {
 #   username: String
 # }
 
-# input ContentCompanyExternalLinkInput {
-#   key: String!
-#   url: String!
-#   label: String
-# }
+
 
 # input ContentCompanySocialLinkInput {
 #   provider: String!
 #   url: String!
 # }
 
-# input ContentCompanyCompanyCompetitorsInput {
-#   status: ModelStatus = active
-#   sort: ContentCompanySortInput = {}
-#   pagination: PaginationInput = {}
-# }
 
-# input ContentCompanyBrandsCarriedInput {
-#   status: ModelStatus = active
-#   sort: ContentCompanySortInput = {}
-#   pagination: PaginationInput = {}
-# }
 
-# input ContentCompanyFeaturedCategoriesInput {
-#   status: ModelStatus = active
-#   sort: TaxonomySortInput = {}
-#   pagination: PaginationInput = {}
-# }
 
-# input ContentCompanyParentCompanyInput {
-#   status: ModelStatus = active
-# }
 
-# input ContentCompanySortInput {
-#   field: ContentSortField = id
-#   order: SortOrder = desc
-# }
 
-# input ContentCompanyYoutubeVideosInput {
-#   pagination: PaginationInput = {}
-# }
 
-# input ContentCompanyExternalLinksInput {
-#   keys: [String]
-# }
+
+
+
+
+
 
 # input UpdateContentCompanyPublicContactsMutationInput {
 #   id: Int!

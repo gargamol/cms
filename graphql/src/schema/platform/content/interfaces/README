@@ -1,0 +1,24 @@
+Generally stand-alone plugable support for blocks of fields that are used in more than one content type, but NOT all content types (else would be in the overall content interface)
+Most just return String/Bool/Int, there are a few additional resolvers (city/state/zip cleanu in addressable for example).
+Contact type defs are used often for some interfaces (authorable linking author contacts, media linking photographer contacts, etc)
+
+addressable - address and location info (city/state/zip/etc).  Used within Company, Conatct, etc.  All plain strings (one resolver for city/state/zip cleanup)
+
+authorable - mainly used for authors, but also supports contributors and photographers but I've not heard of before.  All are contact references, and can take status/sort/pageination args. Authors supported on most content types:
+
+contactable - name, phone (and variations), email (and variations), website, etc all plain Strings.  Used in Conatct, Company, etc
+
+content - the main core conent interface supporting common elemensts across all content types
+
+index - the wrapper include
+
+inquirable - RMI focused.  Small, just allows to check bool status of enableRmi on an item, and has resolver to get Emails to send RMI to
+
+media - Asset (Image) fields.  fileNmae, filePath, fileSrc resovler (how does that differ from src resolver on Asset type?).  Also contacts element pluging into the 'photographer' contact type, supporting the usual stats/sort/pagination
+@jpdev - look into fileSrc here vs src in Asset - is one legacy or dreprecited, or is there a need for both?
+
+organization-contactable - Company contacts, haven't seen used elsewhere but broken into interface here.  listingContacts, marketingContacts, salesContacts, publicContacts.  All using the same ContentContact stream and supporting same input
+
+primary-category - adds a single field - primaryCategory pulling from mutations.Website.primaryCategory.  Not sure why this is broken out, thought it was supported on all content, perhaps because it was not fully supported, or intended to go away?
+
+social-linkable - socialLinks support (twitter/facebook/instagram/etc) - all use same entity support (EntityStubSocial) of format provider/url/label

@@ -1,0 +1,13 @@
+apparatus - firehouse only.  Content + Authorable + custom elements. Apparatus data aerial, engine, tank, ec.  Uses group type for group element
+article - common - Content + Authorable
+blog - common - Content + Authorable
+collection - just Content + 2 custom elemnts - 'displayContentType' element and 'collection' return.  What do we use this form (generic return of an array?)
+company - common - Content + Addressable + SocialLinkable + Contactable + OrganizationContactable + Inquirable + PrimaryCategory
+document - common - Content + Media 
+ebook - ? - Content + 2 custom fields (linkText & linkUrl) - where do we use this?  Looks like external link but we have as a type as well?  Some aquisition compromise?
+engine-spec - firehouse? vspc? - Content + custom fields
+event - common - Content + Contactable + Addressable + custom elements and resolvers
+group - Content + custom elements - called 'group' but data points indicate its meant/used as a firehouse content item.  annualBudget, munticaplity, chief - has refMany to apparatus and in-quarters types, etc.  Not sure if used anywhere else
+in-quarters - firehouse only - Content + Authorable + custom elements. email, state, year, engine, earials, etc.  Don't know how it differs from group, except that it seems group can have several in-quarters and some overall parent grouping.
+
+product - common - Content & PrimaryCategory & Inquirable
