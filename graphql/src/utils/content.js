@@ -43,7 +43,6 @@ const createTitleCompany = async (doc, { load }) => {
 };
 
 const createTitle = async (doc, ctx) => {
-  console.log('content utils - createTitle')
   if (!isObject(doc)) return null;
   const title = createSeoTitle(doc);
   if (doc.type !== 'Product') return title;

@@ -2,7 +2,6 @@ const deepAssign = require('deep-assign');
 
 //const { contentResolvers } = require('./content/resolvers');
 const contentResolvers = require('./content/resolvers');
-//console.log(contentResolvers);
 
 // @jpdev - still not convinced we should do class export instead of code within the export, kindof forcing it for these simplier cases holding out that it might make more sense in the complicated parts down the line
 const { assetResolvers } = require('./asset/resolvers');

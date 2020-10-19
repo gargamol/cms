@@ -16,8 +16,6 @@ const {
 const { ResolverLogic } = require('./resolverLogic');
 
 const resolveType = async ({ type }) => `Content${type}`;
-console.log('resolveType');
-console.log(resolveType);
 
 const contentResolvers = {
 
