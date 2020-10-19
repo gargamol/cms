@@ -34,8 +34,8 @@ module.exports = gql`
     status: ModelStatus = active
   }
 
-    input ContentArticleSortInput {
-      field: ContentSortField = id
-      order: SortOrder = desc
-    }
+  input ContentArticleSortInput {
+    field: ContentSortField = id
+    order: SortOrder = desc
+  }
 `;
