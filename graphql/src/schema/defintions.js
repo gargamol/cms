@@ -27,6 +27,9 @@ module.exports = gql`
   # used in allPublishedContent
   directive @requiresProject(fields: [String] = []) on OBJECT | INTERFACE
 
+  # used to format dates and apply time zone adjustments
+  directive @momentFormat(localField: String) on FIELD_DEFINITION
+
   directive @projection(
     localField: String
     needs: [String] = []

@@ -2,10 +2,19 @@ apply-interface
     Used to add dynamically add all elements present within an interface (ie. Content) to an implementation (ie. ContentArticle)  Basically add a element to the interface, and its available in all implentations of that interface.
 
 array-value
-    Used to translate an array of values from a field on the data to a field in the typeDef.
+    Used to translate an array of values from a field on the data to a field in the typeDef
 
 find-one
-    @jpdev Not implemented yet, used for simple queries
+    generic logic mainly used to fulfill query endpoints that look up one item based on an id
+    Arguments
+        model - the scn of database.collection needed (platform.Content, website.Section, etc)
+        using - the fields required to fulfill the resolution 
+        criteria - same as elsewhere, basic level of query criteria, usually in find one it just ass type:Article to the _id used in the eventual mongo query
+        withSite - same use as elsewhere - consider side.$id when getting the one
+        siteField - same use as elsewhere - what field to look for site.$id in
+        queryBuilder - optional place where additional query logic is more than adding type:Article - haven't followed its use enough to describe in more detail yet
+    ie. Simple case is getArticle @findOne(model: "platform.Content" using: { id: "_id" } criteria: "contentArticle")
+    @jpdev - haven't confirmed the importance to key/value, id: "_id", presume local/mongo names but need to see more use in this case
 
 mutated-value
     used to get alternate versions of the same field.  For example name (could return name, mutations.Website.name, or mutations.Magazine.name)

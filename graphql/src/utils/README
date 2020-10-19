@@ -67,6 +67,10 @@ as-object
     exported function that will check if input is an object and return it if so, otherwise returns an empty object 
     @jpdev - what? Is that right? just return an empty object?
 
+content:
+    Currenly only used within query-builders/published-content, and exposes get-published-content-criteria util to convert query for mongo.  Other @todo notes in the indiate it was old or being revised heavily.
+    Perhaps will roll get-published-content-criteria into the query builder and get rid of this entirely.  Disabled other items (getTitle, getDescription) in there until I review need/use
+
 connection-projection :
     Used within allPublishedContent resolver which returns a ContentConnection type.  Takes graqphql introspective 'info' and in conjunction returns an array of which data points the allPublishedContnt resolver should return.
     Functionally, it adds the projection configuration of one thing (projectUsing=ContentArticle) onto each edge node in the connection, since you aren't doing projetion of the connection itself
@@ -111,7 +115,8 @@ get-projection
     So basically just gets the fields from related typedefs within the process of resolving a parent typedef
 
 get-published-content-criteria
-    Used within allPublishedContent resolver, essentially converts the allPublishedContentInput (incoming args) type into a mongo query criteria used within basedb. Sets some defaults, and fallbacks, etc
+    Used within allPublishedContent resolver, as well as query-builders/published-content
+    essentially converts the allPublishedContentInput (incoming args) type into a mongo query criteria used within basedb. Sets some defaults, and fallbacks, etc
     @jpdev - expand on inputs pehaps here?
 
 get-website-section-decendant-ids : 

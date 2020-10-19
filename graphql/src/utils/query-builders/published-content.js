@@ -1,4 +1,5 @@
-const { getPublishedContentCriteria } = require('@base-cms/utils');
+//const { getPublishedContentCriteria } = require('@base-cms/utils');
+const { getPublishedContentCriteria } = require('../content');
 
 module.exports = ({ query }, { input }) => {
   const { since, after } = input;

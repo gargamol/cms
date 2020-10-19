@@ -4,20 +4,17 @@ const connectionProjection = require('../../../utils/connection-projection.js');
 
 class ResolverLogic {
 
-  static async getContentItem(parent, variables, context, info) {
+  static async getContentExample(parent, variables, context, info) {
 
     const { input } = variables;
     const { basedb } = context;
 
     // Retrieve the content document.
-    // @jpdev - 3rd param is 'options' - prob used for tweaking the query through middleware
-    //   need to look at examples or find a case we need to use
-    // @jpdev - saw {projection: { _id: 1, relatedTo: 1, 'mutations.Website.primarySection': 1 }}
-    //   perhaps to select fields to return?
     const contentId = input.id;
     const doc = await basedb.findById('platform.Content', contentId, {});
 
-    // just return the document - format should be supported by Content interface
+    // just return the document - we often modeled graph typeDef from existing mongo structure.  
+    // Since they line up 1-to-1, can just return object without reformatting
     return doc;
   }
 
@@ -45,6 +42,7 @@ class ResolverLogic {
       ending,
     } = input;
 
+    // @jpdev - did I change this?  Do we only articles if no type explictily asked for?  Or should we be pulling default (all) types?
     const contentTypes = includeContentTypes.length ? includeContentTypes : ['Article'];
 
     const query = getPublishedCriteria({

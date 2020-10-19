@@ -1,10 +1,11 @@
 const { gql } = require('apollo-server');
 
 // Content is abstract with 'type' discriminator, so start with common structure interface
-const contentInterface = require('./interface');
+//const contentInterface = require('./interfaces/content');
+const contentInterfaces = require('./interfaces');
 
 // Include all of the discriminated types with their specific definitions
-const contentTypes = require('./types');
+const contentTypeDefintions = require('./types/definitions');
 
 const contentDefinitions = gql`
 
@@ -12,10 +13,10 @@ const contentDefinitions = gql`
   # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   extend type Query {
 
-    # @jpdev - not sure what the @findone directive does, b4 did - prob params used to select right db, format query sent to mongo, etc
-    getContentItem(input: ContentQueryInput = {}): Content
+    # @jpdev - leaving example with resolver to demonstrate simple directiveless implementation
+    getContentExample(input: ContentQueryInput = {}): Content
 
-    getContentItemOriginal(input: ContentQueryInput = {}): Content
+    getContent(input: ContentQueryInput = {}): Content
     @findOne(
       model: "platform.Content"
       using: { id: "_id" }
@@ -24,8 +25,10 @@ const contentDefinitions = gql`
       withSite: false # allow content to always load, regardless of site context.
     )
 
-    allPublishedContent(input: AllPublishedContentQueryInput = {}): ContentConnection!
-
+    # @jpdev - would prefer to rename this - pretty broad application with input, I think its 'published' because its not auth required so wouldn't want to make 'public' draft, deleted, future content with it
+    # @jpdev - should rename all input types along with it for consistency.  Leaving alone until I decide what to do with it
+    getContentStream(input: AllPublishedContentQueryInput = {}): ContentConnection!
+    
   }
   # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -45,7 +48,7 @@ const contentDefinitions = gql`
     since: Date
     sectionId: Int
     # @deprecated. Use \`AllPublishedContentQueryInput.includeContentTypes\` instead.
-    contentTypes: [ContentType!] = []
+    #contentTypes: [ContentType!] = []
     includeContentTypes: [ContentType!] = []
     excludeContentTypes: [ContentType!] = []
     excludeContentIds: [Int!] = []
@@ -147,6 +150,12 @@ const contentDefinitions = gql`
     surveyId: String
   }
 
+  # Used withing Addressable interface
+  type ContentStubLocation {
+    latitude: Float
+    longitude: Float
+  }
+
   enum GateableUserRole {
     ROLE_REGISTERED
   }
@@ -203,10 +212,10 @@ const contentDefinitions = gql`
 
 
   # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-  # Include Content Interface for the abstract level common defintions
-  ${contentInterface}
+  # Include main Content Interface for the abstract level common defintions, and the various addOn interfaces that get plugged into various extended content types (contactable interface to company type, etc)
+  ${contentInterfaces}
   # Include the type specific implementations of each content type from the types subdirectory
-  ${contentTypes}
+  ${contentTypeDefintions}
   # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 `;
@@ -399,10 +408,7 @@ module.exports = {
 //   path: String!
 // }
 
-// type ContentStubLocation {
-//   latitude: Float
-//   longitude: Float
-// }
+
 
 // type ContentWebsiteSchedule {
 //   section: WebsiteSection @refOne(loader: "websiteSection", localField: "sectionId")

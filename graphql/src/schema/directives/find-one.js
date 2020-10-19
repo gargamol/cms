@@ -5,7 +5,7 @@ const formatStatus = require('../../utils/format-status');
 const criteriaFor = require('../../utils/criteria-for');
 const applyInput = require('../../utils/apply-input');
 const getProjection = require('../../utils/get-projection');
-const buildQuery = require('../../query-builders');
+const buildQuery = require('../../utils/query-builders');
 
 class FindOneDirective extends SchemaDirectiveVisitor {
   /**
@@ -14,8 +14,8 @@ class FindOneDirective extends SchemaDirectiveVisitor {
    */
   visitFieldDefinition(field) {
     // eslint-disable-next-line no-param-reassign
-    field.resolve = async (_, variables, ctx, info) => {
-      const { basedb, site } = ctx;
+    field.resolve = async (_, variables, context, info) => {
+      const { basedb, site } = context;
       const { input = {} } = variables;
 
       const {
@@ -49,7 +49,7 @@ class FindOneDirective extends SchemaDirectiveVisitor {
       const { query, sort } = await buildQuery(queryBuilder, {
         currentValues: { query: applied, sort: input.sort },
         variables,
-        ctx,
+        context,
         info,
       });
 
