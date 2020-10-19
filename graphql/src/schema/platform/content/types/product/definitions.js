@@ -3,7 +3,12 @@ const gql = require('graphql-tag');
 module.exports = gql`
 
 extend type Query {
-  getProduct(input: ContentProductQueryInput!): ContentProduct @findOne(model: "platform.Content", using: { id: "_id" }, criteria: "contentProduct")
+  getProduct(input: ContentProductQueryInput!): ContentProduct 
+    @findOne(
+      model: "platform.Content", 
+      using: { id: "_id" }, 
+      criteria: "contentProduct"
+    )
 }
 
 type ContentProduct implements Content & PrimaryCategory & Inquirable @applyInterfaceFields {

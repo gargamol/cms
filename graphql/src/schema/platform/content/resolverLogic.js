@@ -22,7 +22,7 @@ class ResolverLogic {
   /**
     *
    */
-  static async allPublishedContent(parent, variables, context, info) {
+  static async getContentStream(parent, variables, context, info) {
 
     const { input } = variables;
     const { basedb, site } = context;

@@ -4,7 +4,12 @@ module.exports = gql`
 
 extend type Query {
   # @jpdev - do we prefer all one line, or with linebreaks for the directive?  (see ../article/article.js)
-  getCompany(input: ContentCompanyQueryInput!): ContentCompany @findOne(model: "platform.Content", using: { id: "_id" }, criteria: "contentCompany")
+  getCompany(input: ContentCompanyQueryInput!): ContentCompany 
+    @findOne(
+      model: "platform.Content", 
+      using: { id: "_id" }, 
+      criteria: "contentCompany"
+    )
 }
 
 # extend type Mutation {
@@ -45,6 +50,14 @@ type ContentCompany implements Content & PrimaryCategory & Contactable & Address
   featuredCategories(input: ContentCompanyFeaturedCategoriesInput = {}): TaxonomyConnection! @projection(localField: "mutations.Website.featuredCategories") @refMany(model: "platform.Taxonomy", localField: "mutations.Website.featuredCategories", criteria: "taxonomyCategory")
 }
 
+type ContentCompanyYoutube {
+  username: String
+  channelId: String
+  playlistId: String
+  videos: [String!]
+  url: String
+}
+
 type ContentCompanyConnection {
   totalCount: Int!
   edges: [ContentCompanyEdge]!
@@ -80,14 +93,6 @@ input ContentCompanyCompanyCompetitorsInput {
   status: ModelStatus = active
   sort: ContentCompanySortInput = {}
   pagination: PaginationInput = {}
-}
-
-type ContentCompanyYoutube {
-  username: String
-  channelId: String
-  playlistId: String
-  videos: [String!]
-  url: String
 }
 
 input ContentCompanyFeaturedCategoriesInput {

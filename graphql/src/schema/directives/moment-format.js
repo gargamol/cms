@@ -26,4 +26,3 @@ class MomentFormatDirective extends SchemaDirectiveVisitor {
 }
 
 module.exports = MomentFormatDirective;
-

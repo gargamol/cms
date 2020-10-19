@@ -13,7 +13,6 @@ interface Addressable {
   location: ContentStubLocation @projection
 
   # GraphQL-only fields (see resolver)
-  # @jpdev @jpresolve
   cityStateZip: String @projection(localField: "city", needs: ["state", "zip"])
 }
 

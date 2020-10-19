@@ -1,5 +1,5 @@
 <template>
-  <div>
-    <h3>Home Page</h3>
+  <div style="width:100%">
+    <LayoutEditor/>
   </div>
 </template>

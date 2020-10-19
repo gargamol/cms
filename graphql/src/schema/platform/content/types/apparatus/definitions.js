@@ -3,7 +3,12 @@ const gql = require('graphql-tag');
 module.exports = gql`
 
 extend type Query {
-  getApparatus(input: ContentApparatusQueryInput!): ContentApparatus @findOne(model: "platform.Content", using: { id: "_id" }, criteria: "contentApparatus")
+  getApparatus(input: ContentApparatusQueryInput!): ContentApparatus 
+    @findOne(
+      model: "platform.Content", 
+      using: { id: "_id" }, 
+      criteria: "contentApparatus"
+    )
 }
 
 type ContentApparatus implements Content & Authorable @applyInterfaceFields {

@@ -18,6 +18,8 @@ inflector - extension of the 'inflected' node package.  General common text mani
     titleize
     underscore
 
+inquiry-emails - @TODO
+
 object-path-extension
     A bit of extension of the public 'object-path' node package which it includes.  Used for dealing with referincing, setting, pulling data from an object.
     object-path facilitates referencing values deep within objects, the extension just adds a bit of conversion and default setting logic
@@ -74,6 +76,11 @@ content:
 connection-projection :
     Used within allPublishedContent resolver which returns a ContentConnection type.  Takes graqphql introspective 'info' and in conjunction returns an array of which data points the allPublishedContnt resolver should return.
     Functionally, it adds the projection configuration of one thing (projectUsing=ContentArticle) onto each edge node in the connection, since you aren't doing projetion of the connection itself
+
+content
+    @TODO
+    pretty bullshit helper, formatting title and description (for contentMetaData atm, but might be used again later), but I think I saw Notes
+    somewhere saying it shouldn't be done that way so may rip out and clean up instead
 
 create-basedb-client
     creates, initializes and returns an instance of BaseDB.  It requries a tenant key (and a dbContext but I don't know the purpose/use/need of that atm).

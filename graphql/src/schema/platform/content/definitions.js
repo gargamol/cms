@@ -129,6 +129,17 @@ const contentDefinitions = gql`
     sort: ContentSortInput = {}
     pagination: PaginationInput = {}
   }
+
+  # Used in content interface as return type for 'metadata' element
+  # Note: any required projections must be set at the root "metadata" field
+  type ContentMetadata {
+    title: String
+    description: String
+    publishedDate(input: FormatDate = {}): String @momentFormat(localField: "published")
+    updatedDate(input: FormatDate = {}): String @momentFormat(localField: "updated")
+    expiresDate(input: FormatDate = {}): String @momentFormat(localField: "unpublished")
+    image: AssetImage @refOne(localField: "primaryImage", loader: "platformAsset", criteria: "assetImage")
+  }
   
   # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -392,15 +403,7 @@ module.exports = {
 //   cursor: String!
 // }
 
-// # Note: any required projections must be set at the root "metadata" field
-// type ContentMetadata {
-//   title: String
-//   description: String
-//   publishedDate(input: FormatDate = {}): String @momentFormat(localField: "published")
-//   updatedDate(input: FormatDate = {}): String @momentFormat(localField: "updated")
-//   expiresDate(input: FormatDate = {}): String @momentFormat(localField: "unpublished")
-//   image: AssetImage @refOne(localField: "primaryImage", loader: "platformAsset", criteria: "assetImage")
-// }
+
 
 // type ContentSiteContext {
 //   url: String!
