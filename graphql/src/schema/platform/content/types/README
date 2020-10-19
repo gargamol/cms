@@ -1,3 +1,9 @@
+@jpdev - most of the implementations are very simliar typeDefs - combination of Content and additional optional interfaces, often
+with a few extra simple (string/int/etc) fields on top.  A few times there are more additional complex (refOne, refMany, or object) fields.
+Rarely there is a field which requires a type specific resolver, but its supported.
+Most are essentially a way to have a descriminated version of the content object (ContentArticle instead of Article) 
+as well as Connection -(ContentArticleConnection instad of ContentConnection) for each particular content type we have.
+
 apparatus - firehouse only.  Content + Authorable + custom elements. Apparatus data aerial, engine, tank, ec.  Uses group type for group element
 article - common - Content + Authorable
 blog - common - Content + Authorable
@@ -9,5 +15,28 @@ engine-spec - firehouse? vspc? - Content + custom fields
 event - common - Content + Contactable + Addressable + custom elements and resolvers
 group - Content + custom elements - called 'group' but data points indicate its meant/used as a firehouse content item.  annualBudget, munticaplity, chief - has refMany to apparatus and in-quarters types, etc.  Not sure if used anywhere else
 in-quarters - firehouse only - Content + Authorable + custom elements. email, state, year, engine, earials, etc.  Don't know how it differs from group, except that it seems group can have several in-quarters and some overall parent grouping.
+infographic - ? - Standard setup - Content + Media 
+job - common - Standard Setup - Content + simple custom fields
+media-gallery - common - standard setup - Conntet + Authorable + simple custom fields
+news - common - standard setup - Content + Authorable + simple custom fields
+page - common - standard setup - Content
+podcast - common - Content + Authorable + Media + simple custom fields
+press-release - common - Content + Authorable + simple custom fields
+product - common = Content + PrimaryCategory + Inquirable + custom fields
+promotion - ? - Content + simple custom fields
+review - ? - Content + Authorable + complex custom fields (product ref)
+space - ? one site - Content + complex custom fields
+sponsored - ? - Content + Authorable
+supplier - ? one site - Content & Contactable & Addressable & SocialLinkable & Inquirable & OrganizationContactable + complex custom fields
+text-ad - common - Content + simple custom fields
+top-100 - ? one site (bzb?) - Content + Addressable + SocialLinkable + simple custom fields
+top-list - ? one site (bzb?) - Content + Authorable
+venue - ? - Content & Contactable & Addressable & SocialLinkable & Inquirable & OrganizationContactable + complex custom fields
+video - common - Content + Authorable + Media + simple custom fields
+webinar - common - Content + Media + complex custom fields + resolvers
+whitepaper - common - Content + Authorable + Media + complex custom fields
 
-product - common - Content & PrimaryCategory & Inquirable
+resolvers
+company - has a mess of an implementation centered around company youtube videos, pulling from google api, using the @base-cms micro package 
+    which is a wrapper of a wrapper of a wrapper of a json client.  Code is in there, but disabling because it feels theres a better way
+
