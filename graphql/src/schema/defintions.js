@@ -21,9 +21,6 @@ module.exports = gql`
   # name(input: ContentMutationInput = {}): String @projection(localField: "name", needs: ["mutations.Website.name", "mutations.Email.name", "mutations.Magazine.name"]) @mutatedValue
   directive @mutatedValue(localField: String) on FIELD_DEFINITION
 
-  # date formatting
-  directive @momentFormat(localField: String) on FIELD_DEFINITION
-  
   # insert purpose/use here
   directive @arrayValue(localField: String) on FIELD_DEFINITION
 
