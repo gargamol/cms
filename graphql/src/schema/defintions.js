@@ -87,8 +87,6 @@ module.exports = gql`
     endCursor: String
   }
 
-
-
   enum SortOrder {
     asc
     desc

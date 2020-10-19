@@ -126,6 +126,17 @@ const contentDefinitions = gql`
     sort: ContentSortInput = {}
     pagination: PaginationInput = {}
   }
+
+  # Used in content interface as return type for 'metadata' element
+  # Note: any required projections must be set at the root "metadata" field
+  type ContentMetadata {
+    title: String
+    description: String
+    publishedDate(input: FormatDate = {}): String @momentFormat(localField: "published")
+    updatedDate(input: FormatDate = {}): String @momentFormat(localField: "updated")
+    expiresDate(input: FormatDate = {}): String @momentFormat(localField: "unpublished")
+    image: AssetImage @refOne(localField: "primaryImage", loader: "platformAsset", criteria: "assetImage")
+  }
   
   # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -210,6 +221,7 @@ const contentDefinitions = gql`
   # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   # Include Content Interface for the abstract level common defintions
   ${contentInterfaces}
+
   # Include the type specific implementations of each content type from the types subdirectory
   ${contentTypes}
   # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -388,15 +400,7 @@ module.exports = {
 //   cursor: String!
 // }
 
-// # Note: any required projections must be set at the root "metadata" field
-// type ContentMetadata {
-//   title: String
-//   description: String
-//   publishedDate(input: FormatDate = {}): String @momentFormat(localField: "published")
-//   updatedDate(input: FormatDate = {}): String @momentFormat(localField: "updated")
-//   expiresDate(input: FormatDate = {}): String @momentFormat(localField: "unpublished")
-//   image: AssetImage @refOne(localField: "primaryImage", loader: "platformAsset", criteria: "assetImage")
-// }
+
 
 // type ContentSiteContext {
 //   url: String!
